@@ -1,4 +1,7 @@
 package yabomonkey.example.flickrbrowser
 
-class GetRawData {
+import android.os.AsyncTask
+
+class GetRawData : AsyncTask<String, Void, String>() {
+
 }
