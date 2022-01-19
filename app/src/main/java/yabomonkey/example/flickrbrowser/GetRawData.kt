@@ -1,6 +1,7 @@
 package yabomonkey.example.flickrbrowser
 
 import android.os.AsyncTask
+import android.util.Log
 import java.io.IOException
 import java.lang.Exception
 import java.net.MalformedURLException
@@ -13,7 +14,7 @@ enum class DownloadStatus {
 }
 
 class GetRawData : AsyncTask<String, Void, String>() {
-    private val downloadStatus = DownloadStatus.IDLE
+    private var downloadStatus = DownloadStatus.IDLE
 
     override fun onPostExecute(result: String?) {
         super.onPostExecute(result)
@@ -41,11 +42,13 @@ class GetRawData : AsyncTask<String, Void, String>() {
                 is SecurityException -> {
                     downloadStatus = DownloadStatus.PERMISSIONS_ERROR
                     "doInBackground: Security Exception: Needs permission? ${e.message}"
-                } else {
+                } else -> {
                     downloadStatus = DownloadStatus.ERROR
                     "Unknown Error: ${e.message}"
                 }
             }
+            Log.e(TAG, errorMessage)
+            return errorMessage
         }
     }
 
