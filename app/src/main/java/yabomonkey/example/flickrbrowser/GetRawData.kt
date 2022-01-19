@@ -10,4 +10,6 @@ enum class DownloadStatus {
 
 class GetRawData : AsyncTask<String, Void, String>() {
     private val downloadStatus = DownloadStatus.IDLE
+
+    
 }
