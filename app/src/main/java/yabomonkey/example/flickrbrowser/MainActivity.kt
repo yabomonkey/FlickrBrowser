@@ -13,7 +13,7 @@ import yabomonkey.example.flickrbrowser.databinding.ActivityMainBinding
 
 private const val TAG = "MainActivity"
 
-class MainActivity : AppCompatActivity() {
+class MainActivity: AppCompatActivity(), GetRawData.OnDownloadComplete {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
@@ -30,7 +30,8 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-        val getRawData = GetRawData()
+        val getRawData = GetRawData(this)
+//        getRawData.setDownloadCompleteListener(this)
         getRawData.execute("https://www.flickr.com/services/feeds/photos_public.gne?tags=android,oreo,sdk&tagmode=any&format=json&nojsoncallback=1")
 
 //        binding.fab.setOnClickListener { view ->
@@ -63,6 +64,15 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
+    }
+
+    override fun onDownloadComplete(data: String, status: DownloadStatus) {
+        if (status == DownloadStatus.OK){
+            Log.d(TAG, "onDownloadComplete called, data is $data")
+        } else {
+            //download failed
+            Log.d(TAG, "onDownloadComplete failed with status $status, Error message is: $data")
+        }
     }
 
 
