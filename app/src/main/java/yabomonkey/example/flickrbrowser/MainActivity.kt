@@ -1,5 +1,6 @@
 package yabomonkey.example.flickrbrowser
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -13,7 +14,8 @@ import yabomonkey.example.flickrbrowser.databinding.ActivityMainBinding
 
 private const val TAG = "MainActivity"
 
-class MainActivity: AppCompatActivity(), GetRawData.OnDownloadComplete, GetFlickrJsonData.OnDataAvailable {
+class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete,
+    GetFlickrJsonData.OnDataAvailable {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
@@ -30,15 +32,39 @@ class MainActivity: AppCompatActivity(), GetRawData.OnDownloadComplete, GetFlick
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
+        val url = CreateUri(
+            "https://www.flickr.com/services/feeds/photos_public.gne",
+            "android,oreo",
+            "en-us",
+            true
+        )
         val getRawData = GetRawData(this)
 //        getRawData.setDownloadCompleteListener(this)
-        getRawData.execute("https://www.flickr.com/services/feeds/photos_public.gne?tags=android,oreo,sdk&tagmode=any&format=json&nojsoncallback=1")
+        getRawData.execute(url)
 
 //        binding.fab.setOnClickListener { view ->
 //            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                .setAction("Action", null).show()
 //        }
         Log.d(TAG, "OnCreate ends")
+    }
+
+    private fun CreateUri(
+        baseUrl: String,
+        searchCritera: String,
+        lang: String,
+        matchAll: Boolean
+    ): String {
+        Log.d(TAG, ".createUri starts")
+
+        return Uri.parse(baseUrl).buildUpon()
+            .appendQueryParameter("tags", searchCritera)
+            .appendQueryParameter("tagmode", if (matchAll) "ALL" else "ANY")
+            .appendQueryParameter("lang", lang)
+            .appendQueryParameter("format", "json")
+            .appendQueryParameter("nojsoncallback", "1")
+            .build()
+            .toString()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -67,7 +93,7 @@ class MainActivity: AppCompatActivity(), GetRawData.OnDownloadComplete, GetFlick
     }
 
     override fun onDownloadComplete(data: String, status: DownloadStatus) {
-        if (status == DownloadStatus.OK){
+        if (status == DownloadStatus.OK) {
             val getFlickrJsonData = GetFlickrJsonData(this)
             getFlickrJsonData.execute(data)
         } else {
