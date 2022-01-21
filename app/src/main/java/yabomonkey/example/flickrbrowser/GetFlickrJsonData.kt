@@ -2,6 +2,7 @@ package yabomonkey.example.flickrbrowser
 
 import android.os.AsyncTask
 import android.util.Log
+import org.json.JSONException
 import org.json.JSONObject
 
 private val TAG = "GetFlickrJsonData"
@@ -10,7 +11,7 @@ class GetFlickrJsonData(private val listener: OnDataAvailable) :
     AsyncTask<String, Void, ArrayList<Photo>>() {
 
     override fun doInBackground(vararg params: String?): ArrayList<Photo> {
-        Log.d(TAG, "doinBackground: starts")
+        Log.d(TAG, "doInBackground: starts")
 
         val photoList = ArrayList<Photo>()
         try {
@@ -31,16 +32,23 @@ class GetFlickrJsonData(private val listener: OnDataAvailable) :
                 val photoObject = Photo(title, author, authorId, link, tags, photoUrl)
 
                 photoList.add(photoObject)
-                Log.d(TAG, "Added photo object: ${photoObject.toString()}")
+                Log.d(TAG, ".doInBackground: $photoObject")
             }
-        } catch (e: Exception) {
-
+        } catch (e: JSONException) {
+            e.printStackTrace()
+            Log.d(TAG, ".doInBackground: Error processing Json data. ${e.message}")
+            listener.onError(e)
         }
+
+        Log.d(TAG, ".doInBackground ends")
         return photoList
     }
 
-    override fun onPostExecute(result: ArrayList<Photo>?) {
+    override fun onPostExecute(result: ArrayList<Photo>) {
         Log.d(TAG, "onPostExecute starts")
+        super.onPostExecute(result)
+        listener.onDataAvailable(result)
+        Log.d(TAG, "onPostExecute ends.")
     }
 
     interface OnDataAvailable {
