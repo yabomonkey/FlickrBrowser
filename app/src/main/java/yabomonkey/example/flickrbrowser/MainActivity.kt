@@ -77,7 +77,7 @@ class MainActivity: AppCompatActivity(), GetRawData.OnDownloadComplete, GetFlick
     }
 
     override fun onDataAvailable(data: List<Photo>) {
-        Log.d(TAG, ".onDataAvailable called, data is $data")
+        Log.d(TAG, ".onDataAvailable called")
 
         Log.d(TAG, ".onDataAvailable ends.")
     }
