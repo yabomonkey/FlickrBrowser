@@ -28,10 +28,6 @@ class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete,
 
         setSupportActionBar(binding.toolbar)
 
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appBarConfiguration)
-
         val url = CreateUri(
             "https://www.flickr.com/services/feeds/photos_public.gne",
             "android,oreo",
@@ -85,12 +81,12 @@ class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete,
         }
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        Log.d(TAG, "onSupportNavigateUp Called")
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
-    }
+//    override fun onSupportNavigateUp(): Boolean {
+//        Log.d(TAG, "onSupportNavigateUp Called")
+//        val navController = findNavController(R.id.nav_host_fragment_content_main)
+//        return navController.navigateUp(appBarConfiguration)
+//                || super.onSupportNavigateUp()
+//    }
 
     override fun onDownloadComplete(data: String, status: DownloadStatus) {
         if (status == DownloadStatus.OK) {
