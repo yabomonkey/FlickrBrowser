@@ -6,10 +6,8 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import yabomonkey.example.flickrbrowser.databinding.ActivityMainBinding
 
 private const val TAG = "MainActivity"
@@ -18,6 +16,7 @@ class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete,
     GetFlickrJsonData.OnDataAvailable {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    private val flickrRecyclerViewAdapter = FlickrRecyclerViewAdapter(ArrayList())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate Called")
@@ -27,6 +26,9 @@ class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete,
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
+
+        binding.mainActivityContainer.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.mainActivityContainer.recyclerView.adapter = flickrRecyclerViewAdapter
 
         val url = CreateUri(
             "https://www.flickr.com/services/feeds/photos_public.gne",
@@ -100,7 +102,7 @@ class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete,
 
     override fun onDataAvailable(data: List<Photo>) {
         Log.d(TAG, ".onDataAvailable called")
-
+        flickrRecyclerViewAdapter.loadNewData(data)
         Log.d(TAG, ".onDataAvailable ends.")
     }
 
