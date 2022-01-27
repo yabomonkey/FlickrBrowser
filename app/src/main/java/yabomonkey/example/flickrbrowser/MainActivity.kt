@@ -1,25 +1,27 @@
 package yabomonkey.example.flickrbrowser
 
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.annotation.RequiresApi
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.recyclerview.widget.LinearLayoutManager
 import yabomonkey.example.flickrbrowser.databinding.ActivityMainBinding
 
 private const val TAG = "MainActivity"
 
-class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete,
+class MainActivity : BaseActivity(), GetRawData.OnDownloadComplete,
     GetFlickrJsonData.OnDataAvailable, RecyclerItemClickListener.OnRecyclerClickListener {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private val flickrRecyclerViewAdapter = FlickrRecyclerViewAdapter(ArrayList())
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate Called")
         super.onCreate(savedInstanceState)
@@ -27,7 +29,7 @@ class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete,
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSupportActionBar(binding.toolbar)
+        activateToolbar(false)
 
         binding.mainActivityContainer.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.mainActivityContainer.recyclerView.addOnItemTouchListener(RecyclerItemClickListener(this, binding.mainActivityContainer.recyclerView, this))

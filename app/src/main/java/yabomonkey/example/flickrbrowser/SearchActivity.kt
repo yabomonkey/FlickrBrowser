@@ -1,26 +1,29 @@
 package yabomonkey.example.flickrbrowser
 
+import android.os.Build
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import yabomonkey.example.flickrbrowser.databinding.ActivitySearchBinding
 
-class SearchActivity : AppCompatActivity() {
+private val TAG = "SearchActivity"
+
+class SearchActivity : BaseActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivitySearchBinding
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d(TAG, ".onCreate: starts")
         super.onCreate(savedInstanceState)
 
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSupportActionBar(binding.toolbar)
+        activateToolbar(true)
+        Log.d(TAG, ".onCreate: ends")
 
 //        val navController = findNavController(R.id.nav_host_fragment_content_search)
 //        appBarConfiguration = AppBarConfiguration(navController.graph)
