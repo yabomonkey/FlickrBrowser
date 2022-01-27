@@ -1,5 +1,6 @@
 package yabomonkey.example.flickrbrowser
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -124,7 +125,13 @@ class MainActivity : BaseActivity(), GetRawData.OnDownloadComplete,
 
     override fun onItemLongClick(view: View, position: Int) {
         Log.d(TAG, ".onItemLongClick: starts.")
-        Toast.makeText(this, "Long tap at position at $position", Toast.LENGTH_LONG).show()
+//        Toast.makeText(this, "Long tap at position at $position", Toast.LENGTH_LONG).show()
+        val photo = flickrRecyclerViewAdapter.getPhoto(position)
+        if (photo != null) {
+            val intent = Intent(this, PhotoDetailsActivity::class.java)
+            intent.putExtra(PHOTO_TRANSFER, photo)
+            startActivity(intent)
+        }
     }
 
 
