@@ -3,6 +3,8 @@ package yabomonkey.example.flickrbrowser
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.widget.SearchView
 import androidx.annotation.RequiresApi
 import androidx.navigation.ui.AppBarConfiguration
 import yabomonkey.example.flickrbrowser.databinding.ActivitySearchBinding
@@ -13,6 +15,8 @@ class SearchActivity : BaseActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivitySearchBinding
+
+    private var searchView: SearchView? = null
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +37,11 @@ class SearchActivity : BaseActivity() {
 //            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                .setAction("Action", null).show()
 //        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_search, menu)
+        return true
     }
 
 //    override fun onSupportNavigateUp(): Boolean {
