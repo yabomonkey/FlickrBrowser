@@ -23,8 +23,11 @@ class PhotoDetailsActivity : BaseActivity() {
 
         val photo = intent.getParcelableExtra<Photo>(PHOTO_TRANSFER) as Photo
 
-        binding.mainContent.photoTitle.text = photo.title
-        binding.mainContent.photoTags.text = photo.tags
+//        binding.mainContent.photoTitle.text = "Title " + photo.title
+        binding.mainContent.photoTitle.text = resources.getString(R.string.photo_title_text, photo.title)
+//        binding.mainContent.photoTags.text = "Title " + photo.tags
+        binding.mainContent.photoTags.text = resources.getString(R.string.photo_tags_text, photo.tags)
+
         binding.mainContent.photoAuthor.text = photo.author
         Picasso.get()
             .load(photo.link)
