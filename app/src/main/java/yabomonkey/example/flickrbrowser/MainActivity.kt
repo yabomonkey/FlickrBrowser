@@ -1,23 +1,28 @@
 package yabomonkey.example.flickrbrowser
 
+import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
+import android.view.View
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.recyclerview.widget.LinearLayoutManager
 import yabomonkey.example.flickrbrowser.databinding.ActivityMainBinding
 
 private const val TAG = "MainActivity"
 
-class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete,
-    GetFlickrJsonData.OnDataAvailable {
+class MainActivity : BaseActivity(), GetRawData.OnDownloadComplete,
+    GetFlickrJsonData.OnDataAvailable, RecyclerItemClickListener.OnRecyclerClickListener {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private val flickrRecyclerViewAdapter = FlickrRecyclerViewAdapter(ArrayList())
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate Called")
         super.onCreate(savedInstanceState)
@@ -25,9 +30,10 @@ class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete,
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSupportActionBar(binding.toolbar)
+        activateToolbar(false)
 
         binding.mainActivityContainer.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.mainActivityContainer.recyclerView.addOnItemTouchListener(RecyclerItemClickListener(this, binding.mainActivityContainer.recyclerView, this))
         binding.mainActivityContainer.recyclerView.adapter = flickrRecyclerViewAdapter
 
         val url = CreateUri(
@@ -110,6 +116,22 @@ class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete,
         Log.d(TAG, ".onError called, error is $exception")
 
         Log.d(TAG, ".onError ends.")
+    }
+
+    override fun onItemClick(view: View, position: Int) {
+        Log.d(TAG, ".onItemClick: starts.")
+        Toast.makeText(this, "Normal tap at position at $position", Toast.LENGTH_LONG).show()
+    }
+
+    override fun onItemLongClick(view: View, position: Int) {
+        Log.d(TAG, ".onItemLongClick: starts.")
+//        Toast.makeText(this, "Long tap at position at $position", Toast.LENGTH_LONG).show()
+        val photo = flickrRecyclerViewAdapter.getPhoto(position)
+        if (photo != null) {
+            val intent = Intent(this, PhotoDetailsActivity::class.java)
+            intent.putExtra(PHOTO_TRANSFER, photo)
+            startActivity(intent)
+        }
     }
 
 
