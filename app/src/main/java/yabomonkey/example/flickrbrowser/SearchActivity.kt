@@ -1,5 +1,7 @@
 package yabomonkey.example.flickrbrowser
 
+import android.app.SearchManager
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -28,25 +30,35 @@ class SearchActivity : BaseActivity() {
 
         activateToolbar(true)
         Log.d(TAG, ".onCreate: ends")
-
-//        val navController = findNavController(R.id.nav_host_fragment_content_search)
-//        appBarConfiguration = AppBarConfiguration(navController.graph)
-//        setupActionBarWithNavController(navController, appBarConfiguration)
-//
-//        binding.fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show()
-//        }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        Log.d(TAG, ".onCreateOptionsMenu: starts")
         menuInflater.inflate(R.menu.menu_search, menu)
+
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        searchView = menu.findItem(R.id.app_bar_search).actionView as SearchView
+        val searchableInfo = searchManager.getSearchableInfo(componentName)
+        searchView?.setSearchableInfo(searchableInfo)
+        searchView?.isIconified = false
+
+        searchView?.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                Log.d(TAG, ".onQueryTextSubmit: called")
+
+                val sharedPref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
+                sharedPref.edit().putString(FLICKR_QUERY, query).apply()
+                searchView?.clearFocus()
+                finish()
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+        }
+        )
         return true
     }
 
-//    override fun onSupportNavigateUp(): Boolean {
-//        val navController = findNavController(R.id.nav_host_fragment_content_search)
-//        return navController.navigateUp(appBarConfiguration)
-//                || super.onSupportNavigateUp()
-//    }
 }

@@ -137,8 +137,12 @@ class MainActivity : BaseActivity(), GetRawData.OnDownloadComplete,
         }
     }
 
+    override fun onResume() {
+        Log.d(TAG, ".onResume: starts")
+        super.onResume()
+    }
 
-//    companion object {
+    //    companion object {
 //        private const val TAG = "MainActivity"
 //    }
 }
