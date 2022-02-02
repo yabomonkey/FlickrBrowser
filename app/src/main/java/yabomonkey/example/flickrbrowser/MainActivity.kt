@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import yabomonkey.example.flickrbrowser.databinding.ActivityMainBinding
 
@@ -140,6 +141,20 @@ class MainActivity : BaseActivity(), GetRawData.OnDownloadComplete,
     override fun onResume() {
         Log.d(TAG, ".onResume: starts")
         super.onResume()
+
+        val sharedPref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val queryResult = sharedPref.getString(FLICKR_QUERY, "")
+
+        if (queryResult != null && queryResult.isNotEmpty() ) {
+            val url = CreateUri(
+                "https://www.flickr.com/services/feeds/photos_public.gne",
+                queryResult,
+                "en-us",
+                true
+            )
+            val getRawData = GetRawData(this)
+            getRawData.execute(url)
+        }
     }
 
     //    companion object {

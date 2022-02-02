@@ -56,8 +56,13 @@ class SearchActivity : BaseActivity() {
             override fun onQueryTextChange(newText: String?): Boolean {
                 return false
             }
+        })
+
+        searchView?.setOnCloseListener {
+            finish()
+            false
         }
-        )
+
         return true
     }
 
